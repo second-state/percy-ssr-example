@@ -1,3 +1,4 @@
+use std::env;
 use std::io::Write;
 use wasmedge_wasi_socket::{Shutdown, TcpListener};
 
@@ -6,8 +7,9 @@ mod mime;
 mod response;
 
 fn main() {
-    let server = TcpListener::bind("127.0.0.1:3000", false).unwrap();
-    println!("Server listening on 127.0.0.1:3000");
+	let port = env::var("PORT").unwrap_or_else(|_| "9091".to_string());
+    let server = TcpListener::bind(format!("0.0.0.0:{port}"), false).unwrap();
+    println!("Server listening on 0.0.0.0:{port}");
 
     // Simple single thread HTTP server
     // For server with Pool support, see https://github.com/second-state/wasmedge_wasi_socket/tree/main/examples/poll_http_server
